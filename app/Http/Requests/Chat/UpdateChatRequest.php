@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Requests\Auth\Chat;
+namespace App\Http\Requests\Chat;
 
 use App\Models\Chat;
 use Illuminate\Foundation\Http\FormRequest;
 
-class DeleteChatRequest extends FormRequest
+class UpdateChatRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,15 +23,16 @@ class DeleteChatRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'type'=>'required|in:force,delete',
+            'name'=>'required|string',
         ];
     }
 
-    public function delete(Chat $chat): bool
+    public function update(Chat $chat): bool
     {
-        if ('type' == 'force'){
-            return $chat->forceDelete();
+        $chat->name = $this->name;
+        if ($chat->isDirty()){
+            return $chat->save();
         }
-        return $chat->delete();
+        return false;
     }
 }

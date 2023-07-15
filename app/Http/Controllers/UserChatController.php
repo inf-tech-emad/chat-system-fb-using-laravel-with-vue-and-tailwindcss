@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\Chat\DeleteChatRequest;
-use App\Http\Requests\Chat\StoreChatRequest;
-use App\Http\Requests\Chat\UpdateChatRequest;
-use App\Models\Chat;
+use App\Http\Requests\UserChat\DeleteUserChatRequest;
+use App\Http\Requests\UserChat\StoreUserChatRequest;
+use App\Http\Requests\UserChat\UpdateUserChatRequest;
+use App\Models\User;
+use App\Models\UserChat;
 
-class ChatController extends Controller
+class UserChatController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,7 +16,7 @@ class ChatController extends Controller
     public function index()
     {
         $data = [
-            'chats'=>Chat::all(),
+            'userChats'=>UserChat::all(),
         ];
     }
 
@@ -30,7 +31,7 @@ class ChatController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreChatRequest $request)
+    public function store(StoreUserChatRequest $request)
     {
         if ($request->store()){
             return back();
@@ -41,17 +42,17 @@ class ChatController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Chat $chat)
+    public function show(UserChat $userChat)
     {
         $data = [
-            'chat'=>$chat,
+            'userChat'=>$userChat,
         ];
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Chat $chat)
+    public function edit(UserChat $userChat)
     {
         //
     }
@@ -59,9 +60,9 @@ class ChatController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateChatRequest $request, Chat $chat)
+    public function update(UpdateUserChatRequest $request, UserChat $userChat)
     {
-        if ($request->update($chat)){
+        if ($request->update($userChat)){
             return back();
         }
         return back()->withErrors([''=>'']);
@@ -70,9 +71,9 @@ class ChatController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(DeleteChatRequest $request,Chat $chat)
+    public function destroy(DeleteUserChatRequest $request,UserChat $userChat)
     {
-        if ($request->delete($chat)){
+        if ($request->delete()){
             return back();
         }
         return back()->withErrors([''=>'']);

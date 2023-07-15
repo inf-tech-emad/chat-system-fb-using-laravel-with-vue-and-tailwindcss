@@ -4,11 +4,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use mysql_xdevapi\Table;
 
-class Chat extends Model
+class UserChat extends Model
 {
     use HasFactory;
-    public function users(){
-        return $this->belongsToMany(User::class,'user_chat');
-    }
+    protected $table = 'user_chat';
 }
