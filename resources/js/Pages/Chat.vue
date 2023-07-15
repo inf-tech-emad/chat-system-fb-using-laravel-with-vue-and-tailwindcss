@@ -1,13 +1,31 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Head } from '@inertiajs/vue3';
+
+import {Head, useForm} from '@inertiajs/vue3';
+
+import TextInput from "@/Components/TextInput.vue";
+import PrimaryButton from "@/Components/PrimaryButton.vue";
 
 const props = defineProps({
     'users' : {
         type : Object,
         default : {}
+    },
+    'chats' : {
+        type : Object,
+        default : {}
     }
 });
+
+const chatForm = useForm({
+    name: '',
+});
+
+const submitChat = () => {
+    chatForm.post(route('chat.store'), {
+        onSuccess: () => chatForm.reset('name'),
+    });
+};
 
 </script>
 
@@ -18,7 +36,6 @@ const props = defineProps({
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">Chat</h2>
         </template>
-
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
@@ -27,56 +44,44 @@ const props = defineProps({
                             <div class="border-r border-gray-300 lg:col-span-1">
                                 <div class="mx-3 my-3">
                                     <div class="relative text-gray-600">
-                                        <span class="absolute inset-y-0 left-0 flex items-center pl-2">
-                                            <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" class="w-6 h-6 text-gray-300">
-                                                <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                                            </svg>
-                                        </span>
-                                        <input type="search" class="block w-full py-2 pl-10 bg-gray-100 rounded outline-none" name="search"
-                                               placeholder="Search" required />
+                                        <form @submit.prevent="submitChat" class="block w-full flex">
+                                            <TextInput v-model="chatForm.name" class="flex-1 mr-5"/>
+                                            <PrimaryButton>
+                                                Add
+                                            </PrimaryButton>
+                                        </form>
                                     </div>
                                 </div>
 
                                 <ul class="overflow-auto h-fit">
-                                    <h2 class="my-2 mb-2 ml-2 text-lg text-gray-600">Chats</h2>
+                                    <h2 class="my-2 mb-2 ml-2 text-lg text-gray-600">Organized Chats</h2>
                                     <li>
-                                        <a
-                                            class="flex items-center px-3 py-2 text-sm transition duration-150 ease-in-out border-b border-gray-300 cursor-pointer hover:bg-gray-100 focus:outline-none">
+                                        <a v-for="chat in $page.props.auth.user.chats" class="flex items-center px-3 py-2 text-sm transition duration-150 ease-in-out border-b border-gray-300 cursor-pointer hover:bg-gray-100 focus:outline-none">
                                             <img class="object-cover w-10 h-10 rounded-full"
                                                  src="https://cdn.pixabay.com/photo/2018/09/12/12/14/man-3672010__340.jpg" alt="username" />
                                             <div class="w-full pb-2">
                                                 <div class="flex justify-between">
-                                                    <span class="block ml-2 font-semibold text-gray-600">Chat Name</span>
-                                                    <span class="block ml-2 text-sm text-gray-600">Last Date</span>
+                                                    <span class="block ml-2 font-semibold text-gray-600">{{ chat.name }}</span>
+                                                    <span class="block ml-2 text-sm text-gray-600">{{ chat.created_at }}</span>
                                                 </div>
                                                 <span class="block ml-2 text-sm text-gray-600">Last Message</span>
                                             </div>
                                         </a>
                                     </li>
                                 </ul>
-                                <ul class="overflow-auto h-fit mt-20">
-                                    <h2 class="my-2 mb-2 ml-2 text-lg text-gray-600">Users</h2>
+
+                                <ul class="overflow-auto h-fit">
+                                    <h2 class="my-2 mb-2 ml-2 text-lg text-gray-600">All Chats</h2>
                                     <li>
-                                        <a v-for="user in users" class="flex items-center px-3 py-2 text-sm transition duration-150 ease-in-out border-b border-gray-300 cursor-pointer hover:bg-gray-100 focus:outline-none">
+                                        <a v-for="chat in chats" class="flex items-center px-3 py-2 text-sm transition duration-150 ease-in-out border-b border-gray-300 cursor-pointer hover:bg-gray-100 focus:outline-none">
                                             <img class="object-cover w-10 h-10 rounded-full"
                                                  src="https://cdn.pixabay.com/photo/2018/09/12/12/14/man-3672010__340.jpg" alt="username" />
                                             <div class="w-full pb-2">
                                                 <div class="flex justify-between">
-                                                    <span class="block ml-2 font-semibold text-gray-600">{{ user.name }}</span>
-                                                    <span class="block ml-2 text-sm text-gray-600">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
-                                                            <title>Iconly/Bulk/Add User</title>
-                                                            <g id="Iconly/Bulk/Add-User" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                                                <g id="Add-User" transform="translate(2.000000, 2.500000)" fill="#000000" fill-rule="nonzero">
-                                                                    <path d="M19.1010274,7.08786248 L17.8979452,7.08786248 L17.8979452,5.9116166 C17.8979452,5.40944608 17.4952055,5 16.9989726,5 C16.5037671,5 16.1,5.40944608 16.1,5.9116166 L16.1,7.08786248 L14.8989726,7.08786248 C14.4027397,7.08786248 14,7.49730856 14,7.99947908 C14,8.50164959 14.4027397,8.91109568 14.8989726,8.91109568 L16.1,8.91109568 L16.1,10.0883834 C16.1,10.5905539 16.5037671,11 16.9989726,11 C17.4952055,11 17.8979452,10.5905539 17.8979452,10.0883834 L17.8979452,8.91109568 L19.1010274,8.91109568 C19.5962329,8.91109568 20,8.50164959 20,7.99947908 C20,7.49730856 19.5962329,7.08786248 19.1010274,7.08786248" id="Fill-1" opacity="0.400000006"/>
-                                                                    <path d="M7.5,12.5155037 C3.45422394,12.5155037 0,13.1623312 0,15.7465996 C0,18.3298543 3.43320432,19 7.5,19 C11.5447751,19 15,18.3531725 15,15.768904 C15,13.1846356 11.5667957,12.5155037 7.5,12.5155037" id="Fill-4"/>
-                                                                    <path d="M7.5,10.0542136 C10.2545709,10.0542136 12.4626318,7.81769091 12.4626318,5.0276137 C12.4626318,2.23753648 10.2545709,-7.99360578e-15 7.5,-7.99360578e-15 C4.74542907,-7.99360578e-15 2.53736821,2.23753648 2.53736821,5.0276137 C2.53736821,7.81769091 4.74542907,10.0542136 7.5,10.0542136" id="Fill-7" opacity="0.400000006"/>
-                                                                </g>
-                                                            </g>
-                                                        </svg>
-                                                    </span>
+                                                    <span class="block ml-2 font-semibold text-gray-600">{{ chat.name }}</span>
+                                                    <span class="block ml-2 text-sm text-gray-600">{{ chat.created_at }}</span>
                                                 </div>
-                                                <span class="block ml-2 text-sm text-gray-600">last Seen Before 1 hour</span>
+                                                <span class="block ml-2 text-sm text-gray-600">Last Message</span>
                                             </div>
                                         </a>
                                     </li>
