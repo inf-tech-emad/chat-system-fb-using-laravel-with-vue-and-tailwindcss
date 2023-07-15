@@ -6,6 +6,8 @@ use App\Http\Requests\Chat\DeleteChatRequest;
 use App\Http\Requests\Chat\StoreChatRequest;
 use App\Http\Requests\Chat\UpdateChatRequest;
 use App\Models\Chat;
+use App\Models\User;
+use Inertia\Inertia;
 
 class ChatController extends Controller
 {
@@ -16,7 +18,9 @@ class ChatController extends Controller
     {
         $data = [
             'chats'=>Chat::all(),
+            'users' => User::all(),
         ];
+        return Inertia::render('Chat' , $data);
     }
 
     /**
