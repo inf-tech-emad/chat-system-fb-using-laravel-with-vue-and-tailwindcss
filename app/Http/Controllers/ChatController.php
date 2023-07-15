@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\Auth\Chat\DeleteChatRequest;
-use App\Http\Requests\Auth\Chat\StoreChatRequest;
-use App\Http\Requests\Auth\Chat\UpdateChatRequest;
+use App\Http\Requests\Chat\DeleteChatRequest;
+use App\Http\Requests\Chat\StoreChatRequest;
+use App\Http\Requests\Chat\UpdateChatRequest;
 use App\Models\Chat;
 
 class ChatController extends Controller

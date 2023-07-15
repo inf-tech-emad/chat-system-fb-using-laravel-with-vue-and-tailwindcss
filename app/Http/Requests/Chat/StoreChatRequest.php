@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Requests\Auth\Chat;
+namespace App\Http\Requests\Chat;
 
 use App\Models\Chat;
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateChatRequest extends FormRequest
+class StoreChatRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -26,13 +26,10 @@ class UpdateChatRequest extends FormRequest
             'name'=>'required|string',
         ];
     }
-
-    public function update(Chat $chat): bool
+    public function store(): bool
     {
+        $chat = new Chat();
         $chat->name = $this->name;
-        if ($chat->isDirty()){
-            return $chat->save();
-        }
-        return false;
+        return $chat->save();
     }
 }
